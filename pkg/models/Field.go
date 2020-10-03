@@ -2,7 +2,8 @@ package models
 
 type Field struct {
 	Base
-	Name    string
-	Address string
-	Phone   string
+	Name    string `json:"name"`
+	Address string `json:"address"`
+	Phone   string `json:"phone"`
+	Email   string `json:"email"`
 }
