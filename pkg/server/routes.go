@@ -18,4 +18,9 @@ func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/user/{id}", func(w http.ResponseWriter, r *http.Request) {
 		controllers.UpdateUser(w, r, s.DB)
 	}).Methods("PUT")
+
+	// Field actions
+	s.Router.HandleFunc("/field", func(w http.ResponseWriter, r *http.Request) {
+		controllers.CreateField(w, r, s.DB)
+	}).Methods("POST")
 }
