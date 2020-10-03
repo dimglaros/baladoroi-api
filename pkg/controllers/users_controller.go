@@ -57,3 +57,30 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func GetUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
+	var err error
+	var u models.User
+
+	id := mux.Vars(r)["id"]
+	if id == "" {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	err = db.First(&u, "id = ?", id).Error
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	u.Password = ""
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(&u)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

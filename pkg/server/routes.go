@@ -12,6 +12,10 @@ func (s *Server) InitializeRoutes() {
 	}).Methods("POST")
 
 	s.Router.HandleFunc("/user/{id}", func(w http.ResponseWriter, r *http.Request) {
+		controllers.GetUser(w, r, s.DB)
+	}).Methods("GET")
+
+	s.Router.HandleFunc("/user/{id}", func(w http.ResponseWriter, r *http.Request) {
 		controllers.UpdateUser(w, r, s.DB)
 	}).Methods("PUT")
 }
