@@ -14,13 +14,17 @@ func CreateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 
 	err = json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	err = db.Create(&user).Error
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
@@ -29,22 +33,26 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 
 	id := mux.Vars(r)["id"]
 	if id == "" {
-		http.Error(w, "Bad request", 400)
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
 	}
 
 	err = db.First(&u, "id = ?", id).Error
 	if err != nil {
-		http.Error(w, err.Error(), 404)
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&u)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	err = db.Updates(&u).Error
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
