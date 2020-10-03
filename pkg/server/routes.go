@@ -23,4 +23,8 @@ func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/field", func(w http.ResponseWriter, r *http.Request) {
 		controllers.CreateField(w, r, s.DB)
 	}).Methods("POST")
+
+	s.Router.HandleFunc("/field/{id}", func(w http.ResponseWriter, r *http.Request) {
+		controllers.GetField(w, r, s.DB)
+	}).Methods("GET")
 }
