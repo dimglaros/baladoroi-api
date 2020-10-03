@@ -31,4 +31,8 @@ func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/field/{id}", func(w http.ResponseWriter, r *http.Request) {
 		controllers.UpdateField(w, r, s.DB)
 	}).Methods("PUT")
+
+	s.Router.HandleFunc("/field/{id}", func(w http.ResponseWriter, r *http.Request) {
+		controllers.DeleteField(w, r, s.DB)
+	}).Methods("DELETE")
 }

@@ -83,3 +83,21 @@ func UpdateField(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func DeleteField(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
+	var err error
+	var f models.Field
+
+	id := mux.Vars(r)["id"]
+	if id == "" {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	err = db.Where("id = ?", id).Delete(&f).Error
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
