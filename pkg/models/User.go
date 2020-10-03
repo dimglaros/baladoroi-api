@@ -2,9 +2,9 @@ package models
 
 type User struct {
 	Base
-	Name        string
-	Surname     string
-	Phone       string
-	Credentials Credentials
-	Games       []Game `gorm:"many2many:game_participants"`
+	Name        string      `json:"name"`
+	Surname     string      `json:"surname"`
+	Phone       string      `json:"phone"`
+	Credentials Credentials `gorm:"constraint:OnUpdate:CASCADE" ;json:"credentials"`
+	Games       []Game      `gorm:"many2many:game_participants"`
 }
