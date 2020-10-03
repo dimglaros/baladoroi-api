@@ -45,7 +45,7 @@ func (s *Server) Initialize(dsn string) error {
 		return err
 	}
 
-	err = s.DB.Debug().AutoMigrate(&models.User{}, &models.Credentials{}, &models.Field{}, &models.Game{})
+	err = s.DB.Debug().AutoMigrate(&models.User{}, &models.Field{}, &models.Game{})
 	if err != nil {
 		return err
 	}

@@ -26,7 +26,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 func UpdateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	var err error
 	var u models.User
-	var c models.Credentials
 
 	id := mux.Vars(r)["id"]
 	if id == "" {
@@ -43,18 +42,10 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 		http.Error(w, err.Error(), 400)
 	}
 
-	err = db.Omit("Credentials").Updates(&u).Error
+	err = db.Updates(&u).Error
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 	}
 
-	err = db.Model(&u).Association("Credentials").Find(&c)
-	if err != nil {
-		http.Error(w, err.Error(), 400)
-	}
-
-	err = db.Model(&c).Updates(&u.Credentials).Error
-	if err != nil {
-		http.Error(w, err.Error(), 400)
-	}
+	w.WriteHeader(http.StatusOK)
 }
