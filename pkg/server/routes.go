@@ -44,4 +44,8 @@ func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/game/{id}", func(w http.ResponseWriter, r *http.Request) {
 		controllers.GetGame(w, r, s.DB)
 	}).Methods("GET")
+
+	s.Router.HandleFunc("/game/{id}", func(w http.ResponseWriter, r *http.Request) {
+		controllers.UpdateGame(w, r, s.DB)
+	}).Methods("PUT")
 }
