@@ -68,7 +68,7 @@ func GetUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 		return
 	}
 
-	err = db.First(&u, "id = ?", id).Error
+	err = db.Debug().Preload("GamesHosting").Select("ID").First(&u, "id = ?", id).Error
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return

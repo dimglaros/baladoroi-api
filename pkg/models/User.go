@@ -7,12 +7,13 @@ import (
 
 type User struct {
 	Base
-	Name     string `json:"name"`
-	Surname  string `json:"surname"`
-	Phone    string `json:"phone"`
-	Email    string `json:"email"`
-	Password string `json:"password,omitempty"`
-	Games    []Game `gorm:"many2many:game_participants" json:"games"`
+	Name         string `json:"name"`
+	Surname      string `json:"surname"`
+	Phone        string `json:"phone"`
+	Email        string `json:"email"`
+	Password     string `json:"password,omitempty"`
+	Games        []Game `gorm:"many2many:game_participants" json:"games"`
+	GamesHosting []Game `gorm:"foreignKey:HostID" json:"gamesHosting"`
 }
 
 func (u *User) BeforeSave(*gorm.DB) (err error) {

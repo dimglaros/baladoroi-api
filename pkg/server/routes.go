@@ -35,4 +35,13 @@ func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/field/{id}", func(w http.ResponseWriter, r *http.Request) {
 		controllers.DeleteField(w, r, s.DB)
 	}).Methods("DELETE")
+
+	// Game actions
+	s.Router.HandleFunc("/game", func(w http.ResponseWriter, r *http.Request) {
+		controllers.CreateGame(w, r, s.DB)
+	}).Methods("POST")
+
+	s.Router.HandleFunc("/game/{id}", func(w http.ResponseWriter, r *http.Request) {
+		controllers.GetGame(w, r, s.DB)
+	}).Methods("GET")
 }

@@ -37,7 +37,7 @@ func GetField(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 		return
 	}
 
-	err = db.First(&f, "id = ?", id).Error
+	err = db.Preload("Games").First(&f, "id = ?", id).Error
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return

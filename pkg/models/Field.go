@@ -6,4 +6,5 @@ type Field struct {
 	Address string `json:"address"`
 	Phone   string `json:"phone"`
 	Email   string `json:"email"`
+	Games   []Game `json:"games"`
 }
