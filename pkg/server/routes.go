@@ -48,4 +48,17 @@ func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/game/{id}", func(w http.ResponseWriter, r *http.Request) {
 		controllers.UpdateGame(w, r, s.DB)
 	}).Methods("PUT")
+
+	// Participation actions
+	s.Router.HandleFunc("/participation", func(w http.ResponseWriter, r *http.Request) {
+		controllers.CreateParticipation(w, r, s.DB)
+	}).Methods("POST")
+
+	s.Router.HandleFunc("/participation/{id}", func(w http.ResponseWriter, r *http.Request) {
+		controllers.GetParticipation(w, r, s.DB)
+	}).Methods("GET")
+
+	s.Router.HandleFunc("/participation/{id}", func(w http.ResponseWriter, r *http.Request) {
+		controllers.UpdateParticipation(w, r, s.DB)
+	}).Methods("PUT")
 }

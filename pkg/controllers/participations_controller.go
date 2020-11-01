@@ -8,17 +8,22 @@ import (
 	"net/http"
 )
 
-func CreateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
+func CreateParticipation(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	var err error
-	var user *models.User
+	var p models.Participation
 
-	err = json.NewDecoder(r.Body).Decode(&user)
+	err = json.NewDecoder(r.Body).Decode(&p)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	err = db.Create(&user).Error
+	if p.UserID.String() == "" || p.GameID.String() == "" {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	err = db.Debug().Create(&p).Error
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -27,9 +32,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func UpdateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
+func GetParticipation(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	var err error
-	var u models.User
+	var p models.Participation
 
 	id := mux.Vars(r)["id"]
 	if id == "" {
@@ -37,46 +42,45 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 		return
 	}
 
-	err = db.First(&u, "id = ?", id).Error
+	err = db.Debug().First(&p, "id = ?", id).Error
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-
-	err = json.NewDecoder(r.Body).Decode(&u)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	err = db.Updates(&u).Error
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-}
-
-func GetUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
-	var err error
-	var u models.User
-
-	id := mux.Vars(r)["id"]
-	if id == "" {
-		http.Error(w, "Bad request", http.StatusBadRequest)
-		return
-	}
-
-	err = db.Debug().Preload("GamesHosting").Preload("Participations").First(&u, "id = ?", id).Error
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
-		return
-	}
-	u.Password = ""
 
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(&u)
+	err = json.NewEncoder(w).Encode(&p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func UpdateParticipation(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
+	var err error
+	var p models.Participation
+
+	id := mux.Vars(r)["id"]
+	if id == "" {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	err = db.First(&p, "id = ?", id).Error
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = db.Updates(&p).Error
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
